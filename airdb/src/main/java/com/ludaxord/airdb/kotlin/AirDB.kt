@@ -1,6 +1,7 @@
 package com.ludaxord.airdb.kotlin
 
 import android.content.Context
+import android.util.Log
 
 open class AirDB(
     context: Context,
@@ -48,19 +49,23 @@ open class AirDB(
         return structure(key, selection = selection, selectionArgs = selectionsArgs.toTypedArray())
     }
 
+    fun setValues(tableName: String, props: HashMap<String?, Any?>, primaryKeyName: String) {
+        val primaryKey = props[primaryKeyName]
+        val structure = structure(
+            tableName,
+            selection = "$primaryKeyName = ?",
+            selectionArgs = arrayOf(primaryKey as String)
+        )
+        if (structure.isNullOrEmpty()) {
+            insertBySQL(tableName, props)
+        } else {
+            Log.e("airdb", "offer already exists")
+        }
+    }
 
-    fun setValues(columnName: String, props: HashMap<String?, Any?>) {
-        val columns = tables?.get(columnName)
-        var patternEqualPush = true
-        if (columns != null) {
-            for ((column, type) in columns) {
-                if (!props.containsKey(column)) {
-                    patternEqualPush = false
-                }
-            }
-        }
-        if (patternEqualPush) {
-            insertBySQL(columnName, props)
-        }
+    fun updateOffer(tableName: String, props: HashMap<String?, Any?>, primaryKeyName: String) {
+        val columns = tables?.get(tableName)
+        val primaryKey = props[primaryKeyName]
+        columns?.let { cols -> updateBySQL(tableName, props, cols, primaryKeyName, primaryKey) }
     }
 }

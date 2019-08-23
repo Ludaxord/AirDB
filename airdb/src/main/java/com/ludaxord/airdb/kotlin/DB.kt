@@ -16,7 +16,7 @@ abstract class DB(
     dbVersion: Int = 1
 ) : SQLiteOpenHelper(context, name, factory, dbVersion) {
 
-    protected var db = context.openOrCreateDatabase(name, Context.MODE_PRIVATE, factory)
+    private var db: SQLiteDatabase = context.openOrCreateDatabase(name, Context.MODE_PRIVATE, factory)
 
     open var tables: HashMap<String, HashMap<String, String>>? = null
 
