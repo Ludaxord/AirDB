@@ -11,8 +11,8 @@ import java.util.Map;
 
 public final class AirDB extends DB {
 
-    public AirDB(Context context, String tableName, @Nullable HashMap<String, String> columns, @Nullable HashMap<String, HashMap<String, String>> table) {
-        super(context, tableName, null, null);
+    public AirDB(Context context, String name, String tableName, @Nullable HashMap<String, String> columns, @Nullable HashMap<String, HashMap<String, String>> table, int version) {
+        super(context, name, table, null, version);
         initTables(tableName, columns, table);
     }
 

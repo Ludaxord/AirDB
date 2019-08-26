@@ -25,14 +25,15 @@ abstract class DB extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
     @Nullable
-    public HashMap<String, HashMap<String, String>> tables = null;
+    HashMap<String, HashMap<String, String>> tables = null;
 
-    DB(Context context, String name, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable Integer version) {
+    DB(Context context, String name, HashMap<String, HashMap<String, String>> tables, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable Integer version) {
         super(context, name, factory, version);
         this.context = context;
         this.name = name;
+        this.tables = tables;
         this.factory = factory;
-        this.db = context.openOrCreateDatabase(name, Context.MODE_PRIVATE, factory);
+        this.db = context.openOrCreateDatabase(this.name, Context.MODE_PRIVATE, factory);
     }
 
 
@@ -73,6 +74,9 @@ abstract class DB extends SQLiteOpenHelper {
         if (tables == null) {
             tables = this.tables;
         }
+
+        Log.d("airdb", String.valueOf(this.tables));
+        Log.w("airdb", String.valueOf(tables));
 
         if (tables != null) {
 
@@ -206,6 +210,8 @@ abstract class DB extends SQLiteOpenHelper {
             default:
                 resolveTable = table;
         }
+
+        Log.i("airdb", String.valueOf(db.getPath()));
 
         Cursor cursor = db.query(resolveTable, columns, selection, selectionArgs, groupBy, having, orderBy);
         String[] columnNames = cursor.getColumnNames();
